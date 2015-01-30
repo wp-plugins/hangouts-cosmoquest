@@ -2,8 +2,8 @@
 Contributors: Ansr
 Donate link: http://cosmoquest.org/x/donate/
 Tags: hangout, hangouts, cosmoquest, ansr, live
-Requires at least: 3.9
-Tested up to: 3.9
+Requires at least: 4.1
+Tested up to: 4.1
 Stable tag: trunk
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -21,7 +21,7 @@ and display an existing playlist.
 Once the plugin is activated, a Hangouts item is added to your backend menu where you
 can set your channel Settings, Add/Edit recurring show descriptions, and add an upcoming
 show description or embed code for a live event. Embed the plugin output on a post or page
-with the code [hangouts] and use the Widget options in your Appearance menu to add to your sidebar. 
+with the code [hangout] and use the Widget options in your Appearance menu to add to your sidebar. 
 
 
 == Installation ==
@@ -36,10 +36,12 @@ with the code [hangouts] and use the Widget options in your Appearance menu to a
 The plugin is new and no one has asked any questions. (check back later)
 
 == Changelog ==
-
+= 1.1 =
+*updated the code to work with most recent versions of wordpress
 = 1.0 =
 *first version
 == Upgrade Notice ==
-
+= 1.1 = 
+upgrade if using 4.0 or higher certain database calls this plugin made stopped working after 3.9
 = 1.0 =
 not an upgrade

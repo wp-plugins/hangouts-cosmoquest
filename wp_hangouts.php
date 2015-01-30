@@ -154,9 +154,10 @@ function cq_0_addCalendar(){
 				array('%d'), 
 				array('%d') 
 			);
-			$show_id = mysql_real_escape_string($_POST['show']);
-			$show_description = mysql_real_escape_string($_POST['show_description']);
-			$get_show = $wpdb->get_results("SELECT * FROM $hangout_shows WHERE id = $show_id",ARRAY_A);
+			$show_id = $_POST['show'];
+			$show_description = $_POST['show_description'];
+			$query = $wpdb->prepare("SELECT * FROM $hangout_shows WHERE id = %s",$show_id);
+			$get_show = $wpdb->get_results($query,ARRAY_A);
 			if (count($get_show) == 0){
 				echo "Invalid show number"; die(); 
 			}
@@ -183,12 +184,11 @@ function cq_0_addCalendar(){
 				echo"<script>alert('Scheduling complete')</script>";
 			}//starting the hangout 
 			else if ($_POST['task'] == "start") {                 
-					$orig = $_POST['embed'];
-					$embed = mysql_real_escape_string($orig);			
+					$embed = $_POST['embed'];			
 					// Get the hashtag for twitter
-					$hashtag = mysql_real_escape_string($_POST['tag']);
+					$hashtag = $_POST['tag'];
 				    $results = $wpdb->get_results("SELECT id FROM $hangouts order by id desc limit 1",ARRAY_A);	
-					$show_id = mysql_real_escape_string($_POST['show']);				
+					$show_id = $_POST['show'];				
 					$wpdb->update( 
 					$hangouts, 
 					array('live' => 1,'embed' => $embed,'hashtag' => $hashtag,'show_id' => $show_id), 
@@ -320,9 +320,9 @@ $table_name = $wpdb->prefix . "hangout_shows";
 //this page also takes care of handling its own form posting
 	if(isset($_POST['hangout_action'])){ 		
 		if($_POST['hangout_action'] =='add_show'){ 
-			$name = mysql_real_escape_string($_POST['show_name']);
-			$url = mysql_real_escape_string($_POST['show_url']); 
-			$description = mysql_real_escape_string($_POST['description']);
+			$name = $_POST['show_name'];
+			$url = $_POST['show_url']; 
+			$description = $_POST['description'];
 			$wpdb->insert( $table_name, 
 			array( 'name' => $name,'url' => $url,'description' => $description),  
 			array( '%s', '%s','%s','%s')
@@ -331,11 +331,11 @@ $table_name = $wpdb->prefix . "hangout_shows";
 		
 		}
 		else if ($_POST['hangout_action'] =='update_show'){
- 		  $description = mysql_real_escape_string($_POST['description']);
-		  $delete = mysql_real_escape_string($_POST['delete']);
-		  $name = mysql_real_escape_string($_POST['show_name']);
-		  $url = mysql_real_escape_string($_POST['show_url']);
-		  $id = mysql_real_escape_string($_POST['show_id']);
+ 		  $description = $_POST['description'];
+		  $delete = $_POST['delete'];
+		  $name = $_POST['show_name'];
+		  $url = $_POST['show_url'];
+		  $id = $_POST['show_id'];
 		  if($delete =="delete"){
 			$wpdb->delete( $table_name, array('id'=>$id), array( '%d' ) );
 			echo"<script>alert('Show Deleted')</script>";			
@@ -390,21 +390,21 @@ function cq_0_settings(){
 	if(isset($_POST['hangout_action'])){  
 		if($_POST['hangout_action'] =='link_channel'){
 			$table_name = $wpdb->prefix . "hangout_data"; 
-			$youtube_channel_name = mysql_real_escape_string($_POST['youtube_channel_name']);
-			$youtube_channel_url = mysql_real_escape_string($_POST['youtube_channel_url']);
-		    $youtube_channel = mysql_real_escape_string($_POST['youtube_embed']);
-			$link_channel = mysql_real_escape_string($_POST['link_channel']);
-			$link_text = mysql_real_escape_string($_POST['link_text']);
-			$width = mysql_real_escape_string($_POST['width']);
+			$youtube_channel_name = $_POST['youtube_channel_name'];
+			$youtube_channel_url = $_POST['youtube_channel_url'];
+		    $youtube_channel = $_POST['youtube_embed'];
+			$link_channel = $_POST['link_channel'];
+			$link_text = $_POST['link_text'];
+			$width = $_POST['width']; 
 			if(is_numeric($width)){
 				if($width < 1 || $width > 5000)
 					die("WIDTH NOT WITH ACCEPTABLE BOUNDS");
 			}
 			else
-				die("WIDTH IS NOT A NUMBER");
-			$delete = $wpdb->query("TRUNCATE TABLE '$table_name'"); 
-			$wpdb->insert($table_name, 
+				die("WIDTH IS NOT A NUMBER"); 
+			$wpdb->replace($table_name, 
 				array( 
+				'id' => 1,
 				'youtube_channel_name' => $youtube_channel_name, 
 				'youtube_channel_url' => $youtube_channel_url,
 				'youtube_channel' => $youtube_channel,
@@ -412,7 +412,7 @@ function cq_0_settings(){
 				'show_link_to_youtube' => $link_channel,
 				'width' => $width
 				),  
-				array('%s','%s','%s','%s','%d','%d')
+				array('%d','%s','%s','%s','%s','%d','%d')
 				); 
 				echo"<script>alert('Information Updated')</script>";
 		}
@@ -443,7 +443,7 @@ function cq_0_settings(){
 				temp.parentNode.removeChild(temp);
 			}
 			else{
-				embed.value = temp.src;
+				embed.value = temp.src; 
 				document.getElementById("update_settings").submit();
 			} 
 		}</script>
